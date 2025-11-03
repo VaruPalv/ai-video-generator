@@ -1,155 +1,140 @@
-import React, { useState } from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  Grid,
-  Paper,
-  CircularProgress,
-} from "@mui/material";
-import UploadImage from "../components/UploadImage";
-import ParameterForm, { type ModelParams } from "../components/ParameterForm";
+import { useState } from "react";
+import { Container, Typography, Box, Grid, Alert } from "@mui/material";
+import ParameterForm, { type ModelParameters } from "../components/ParameterForm";
 import PromptInput from "../components/PromptInput";
 import VideoPreview from "../components/VideoPreview";
+import { generateVideo, type Video } from "../api/videoApi";
 
 export default function Home() {
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [params, setParams] = useState<ModelParams>({
+  const [parameters, setParameters] = useState<ModelParameters>({
     model: "Veo 3.1",
     duration: 6,
     resolution: 720,
     audio: true,
   });
 
-  const handleGenerate = async (promptText: string) => {
-    if (!referenceImage) return alert("Upload a reference image first.");
-    if (!promptText.trim()) return alert("Enter a prompt.");
+  const [generatedVideo, setGeneratedVideo] = useState<Video | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    setIsLoading(true);
-    setVideoUrl(null);
+  const handleGenerate = async (prompt: string) => {
+    if (!referenceImage) {
+      setError("Please upload a reference image first");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
 
     try {
-      const payload = {
-        model: params.model,
+      const response = await generateVideo({
+        ...parameters,
         referenceImage,
-        duration: params.duration,
-        resolution: params.resolution,
-        audio: params.audio,
-        prompt: promptText,
-      };
-
-      const res = await fetch("http://localhost:5000/api/video-generation/v1/videos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        prompt,
       });
 
-      const data = await res.json();
-      const first = data?.videos?.[0];
-      if (first?.url) setVideoUrl(first.url);
-      else alert("Failed to generate video.");
-    } catch (e) {
-      console.error(e);
-      alert("Error generating video.");
+      if (response.videos.length > 0) {
+        setGeneratedVideo(response.videos[0]);
+      }
+    } catch (err) {
+      setError("Failed to generate video. Please try again.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <Box sx={{ bgcolor: "#000", minHeight: "100vh", py: 4 }}>
-      <Container maxWidth="xl">
-        <Grid container spacing={2}>
-          {/* LEFT PANEL */}
-          <Grid item xs={12} md={3}>
-            <Paper
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        <Grid container spacing={3}>
+          {/* Left Panel */}
+          <Grid item xs={12} md={4} lg={3}>
+            <Box
               sx={{
+                backgroundColor: "#1A1A1A",
                 p: 3,
-                bgcolor: "#141414",
-                borderRadius: "12px",
-                height: "100%",
+                borderRadius: 2,
                 display: "flex",
                 flexDirection: "column",
                 gap: 3,
-                color: "#e5e5e5",
+                position: "sticky",
+                top: 24,
+                height: 'fit-content',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
               }}
-              elevation={2}
             >
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Parameters
-              </Typography>
-              <ParameterForm params={params} onChange={setParams} />
-              <Box>
-                <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
-                  Reference Image
-                </Typography>
-                <UploadImage onUpload={setReferenceImage} image={referenceImage} />
-              </Box>
-            </Paper>
+              <ParameterForm
+                onParametersChange={setParameters}
+                onImageUpload={(url) => setReferenceImage(url)}
+              />
+            </Box>
           </Grid>
 
-          {/* RIGHT PANEL */}
-          <Grid item xs={12} md={9}>
-            <Paper
-              sx={{
-                p: 3,
-                bgcolor: "#141414",
-                borderRadius: "12px",
-                color: "#e5e5e5",
-                display: "flex",
-                flexDirection: "column",
-                gap: 3,
-                minHeight: "80vh",
-              }}
-              elevation={2}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 700,
-                  letterSpacing: 0.3,
-                  mb: 1,
-                }}
-              >
-                Toy Video Generator
-              </Typography>
+          {/* Right Panel */}
+          <Grid item xs={12} md={8} lg={9}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              {generatedVideo ? (
+                <VideoPreview video={generatedVideo} />
+              ) : (
+                <Box
+                  sx={{
+                    backgroundColor: "#1A1A1A",
+                    borderRadius: 2,
+                    p: 4,
+                    minHeight: 300,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <Typography variant="body1" color="text.secondary">
+                    Your generated video will appear here
+                  </Typography>
+                </Box>
+              )}
 
-              {/* Video Section */}
               <Box
                 sx={{
-                  position: "relative",
-                  flex: 1,
-                  bgcolor: "#000",
-                  borderRadius: "10px",
-                  overflow: "hidden",
+                  backgroundColor: "#1A1A1A",
+                  borderRadius: 2,
+                  p: 3,
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                 }}
               >
-                <VideoPreview
-                  videoUrl={videoUrl}
-                  isLoading={isLoading}
-                  referenceImage={referenceImage}
-                />
-                {isLoading && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      inset: 0,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      bgcolor: "rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    <CircularProgress color="inherit" />
-                  </Box>
-                )}
+                <PromptInput onGenerate={handleGenerate} loading={loading} />
               </Box>
 
-              {/* Prompt input */}
-              <PromptInput onGenerate={handleGenerate} isLoading={isLoading} />
-            </Paper>
+              {loading && (
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    mt: 4,
+                    p: 4,
+                    bgcolor: "#1A1A1A",
+                    borderRadius: 2,
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    Generating your video...
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    This may take a few moments
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           </Grid>
         </Grid>
       </Container>

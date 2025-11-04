@@ -32,38 +32,6 @@ Users can upload a reference image, adjust model parameters, enter a text prompt
 
 ---
 
-## 📂 Folder Structure  
-
-AI-Video-Generator/
-│
-├── src/
-│ ├── api/
-│ │ └── videoApi.ts
-│ ├── components/
-│ │ ├── ParameterForm.tsx
-│ │ ├── PromptInput.tsx
-│ │ ├── UploadImage.tsx
-│ │ ├── VideoPreview.tsx
-│ │ └── LoadingSpinner.tsx
-│ ├── pages/
-│ │ ├── Home.tsx
-│ │ └── VideoOverlay.tsx
-│ ├── routes/
-│ │ └── AppRouter.tsx
-│ ├── hooks/
-│ │ └── useResponsive.ts
-│ ├── App.tsx
-│ ├── main.tsx
-│ ├── index.css
-│ └── App.css
-│
-├── index.html
-├── package.json
-├── tsconfig.json
-└── README.md
-
-
----
 
 ## ⚙️ Installation & Setup  
 

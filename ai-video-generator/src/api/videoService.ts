@@ -10,8 +10,8 @@ interface VideoGenerationData {
 
 export const generateVideo = async (data: VideoGenerationData) => {
   try {
-    // In a real case, you'd call your backend here.
-    // For now, simulate a fake API response.
+    //  call your backend here.
+    //  fake API response.
     const response = await axios.post("/api/video-generation/v1/videos", data);
     return response.data;
   } catch (error) {

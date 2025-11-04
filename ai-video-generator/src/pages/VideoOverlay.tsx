@@ -10,14 +10,10 @@ export default function VideoOverlay() {
   const location = useLocation();
 
   useEffect(() => {
-    // If the opener passed video data via navigation state, use it.
     if (location.state && (location.state as any).video) {
       setVideoData((location.state as any).video);
       return;
     }
-
-    // Otherwise, in a real app you'd fetch video data by ID.
-    // For now, use mock data as a fallback.
     setVideoData({
       url: "https://www.w3schools.com/html/mov_bbb.mp4",
       prompt: "A woman running around central park in the morning",

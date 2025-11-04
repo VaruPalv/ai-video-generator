@@ -14,7 +14,7 @@ export default function VideoPreview({ video }: VideoPreviewProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Set video to play only for the specified duration
+    // Set video duration
     const handleTimeUpdate = () => {
       if (videoRef.current && videoRef.current.currentTime >= video.duration) {
         videoRef.current.pause();

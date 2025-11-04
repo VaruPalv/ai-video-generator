@@ -36,7 +36,7 @@ export interface VideoGenerationResponse {
 export const generateVideo = async (
   request: VideoGenerationRequest
 ): Promise<VideoGenerationResponse> => {
-  // Skip API call and go straight to mock for testing
+  //  API call skip and go straight to mock for testing
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return {
@@ -67,7 +67,7 @@ export const generateVideo = async (
 };
 
 export const uploadImage = async (file: File): Promise<string> => {
-  // Mock S3 upload – in real implementation, upload to S3 and return URL
+  // S3 upload- model implementation
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);

@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import type { Video } from '../api/videoApi';
 
-// Lazy load the VideoPreview component
 const VideoPreview = lazy(() => import('./VideoPreview'));
 
 interface Props {

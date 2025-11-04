@@ -1,14 +1,18 @@
 import { Box, TextField, IconButton, CircularProgress } from "@mui/material";
 import { Send } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface PromptInputProps {
   onGenerate: (prompt: string) => void;
   loading?: boolean;
+  value?: string;
 }
 
-export default function PromptInput({ onGenerate, loading = false }: PromptInputProps) {
+export default function PromptInput({ onGenerate, loading = false, value = "" }: PromptInputProps) {
   const [prompt, setPrompt] = useState("");
+  useEffect(() => {
+    setPrompt(value || "");
+  }, [value]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

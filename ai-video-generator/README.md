@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# 🧠 AI Video Generator  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive front-end web application built with **React, TypeScript, and Material UI** that simulates an AI-powered video generation interface.  
 
-Currently, two official plugins are available:
+Users can upload a reference image, adjust model parameters, enter a text prompt, and generate mock AI videos. The project follows the design and flow from the **Front-end Hiring Assignment** brief.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📸 Features  
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+✅ **AI Video Generator UI** — Matches the assignment’s Figma design and flow.  
+✅ **Reference Image Upload** — Upload an image (mocked as Base64).  
+✅ **Prompt Input** — Enter custom text prompts to generate AI videos.  
+✅ **Parameter Controls** — Choose model, duration, resolution, and audio toggle.  
+✅ **Responsive Layout** — Works smoothly on mobile, tablet, and desktop.  
+✅ **Hover Interactions** — Video previews auto-play on hover with overlay tooltips.  
+✅ **Routing** — Overlay modal uses `/video/:id` and back button navigates properly.  
+✅ **Mock API Integration** — Generates a sample video via simulated backend.  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🏗️ Tech Stack  
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Category | Tools Used |
+|-----------|-------------|
+| Front-end | React, TypeScript |
+| UI Library | Material UI (MUI v5) |
+| Routing | React Router DOM v6 |
+| Build Tool | Vite |
+| Styling | MUI + CSS Modules |
+| Language | TypeScript (ES2022) |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📂 Folder Structure  
+
+AI-Video-Generator/
+│
+├── src/
+│ ├── api/
+│ │ └── videoApi.ts
+│ ├── components/
+│ │ ├── ParameterForm.tsx
+│ │ ├── PromptInput.tsx
+│ │ ├── UploadImage.tsx
+│ │ ├── VideoPreview.tsx
+│ │ └── LoadingSpinner.tsx
+│ ├── pages/
+│ │ ├── Home.tsx
+│ │ └── VideoOverlay.tsx
+│ ├── routes/
+│ │ └── AppRouter.tsx
+│ ├── hooks/
+│ │ └── useResponsive.ts
+│ ├── App.tsx
+│ ├── main.tsx
+│ ├── index.css
+│ └── App.css
+│
+├── index.html
+├── package.json
+├── tsconfig.json
+└── README.md
+
+
+---
+
+## ⚙️ Installation & Setup  
+
+### 1️⃣ Clone or unzip  
+```bash
+git clone https://github.com/<your-username>/AI-Video-Generator.git
+cd AI-Video-Generator
+```
+# or unzip AI_Project.zip and open the folder
+
+### 2️⃣ Install dependencies
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 3️⃣ Start the development server
+```bash
+npm run dev
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 4️⃣ Build for production
+```bash
+npm run build
+npm run preview
 ```

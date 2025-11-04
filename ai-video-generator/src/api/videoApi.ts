@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export interface VideoGenerationRequest {
   model: string;
   referenceImage: string;

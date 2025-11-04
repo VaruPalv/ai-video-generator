@@ -70,9 +70,11 @@ export default function VideoPreview({ video }: VideoPreviewProps) {
         src={video.url}
         style={{
           width: "100%",
-          height: "300px",
+          height: "auto",
           display: "block",
           objectFit: "cover",
+          aspectRatio: "16 / 9",
+          maxHeight: "66vh",
         }}
         playsInline
       />
@@ -97,7 +99,7 @@ export default function VideoPreview({ video }: VideoPreviewProps) {
       </IconButton>
 
       {/* Description below video */}
-      <Box sx={{ mt: 2, backgroundColor: "#1A1A1A", borderRadius: 2 }}>
+      <Box sx={{ mt: 2, backgroundColor: "#1A1A1A", borderRadius: 2, p: 2 }}>
         <Typography variant="body2" color="text.secondary">
           {video.prompt}
         </Typography>

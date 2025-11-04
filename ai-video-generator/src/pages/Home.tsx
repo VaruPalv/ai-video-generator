@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Typography, Box, Grid, Alert } from "@mui/material";
+import { Container, Typography, Box, Alert } from "@mui/material";
 import ParameterForm, { type ModelParameters } from "../components/ParameterForm";
 import PromptInput from "../components/PromptInput";
 import VideoPreview from "../components/VideoPreview";
@@ -35,7 +35,8 @@ export default function Home() {
       });
 
       if (response.videos.length > 0) {
-        setGeneratedVideo(response.videos[0]);
+        const video = response.videos[0];
+        setGeneratedVideo(video);
       }
     } catch (err) {
       setError("Failed to generate video. Please try again.");
@@ -45,98 +46,113 @@ export default function Home() {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", flex: 1 }}>
+      <Container 
+        maxWidth="xl" 
+        sx={{ 
+          py: { xs: 2, sm: 3 },
+          px: { xs: 2, sm: 3 },
+          display: "flex", 
+          flexDirection: "column", 
+          flex: 1,
+        }}
+      >
         {error && (
           <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
 
-        <Grid container spacing={3}>
-          {/* Left Panel */}
-          <Grid item xs={12} md={4} lg={3}>
-            <Box
-              sx={{
-                backgroundColor: "#1A1A1A",
-                p: 3,
-                borderRadius: 2,
-                display: "flex",
-                flexDirection: "column",
-                gap: 3,
-                position: "sticky",
-                top: 24,
-                height: 'fit-content',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <ParameterForm
-                onParametersChange={setParameters}
-                onImageUpload={(url) => setReferenceImage(url)}
-              />
-            </Box>
-          </Grid>
+        <Box sx={{ 
+          display: "flex", 
+          gap: { xs: 2, sm: 2.5 }, 
+          flex: 1,
+          flexDirection: { xs: "column", md: "row" }
+        }}>
+          {/* Left sidebar fixed width */}
+          <Box
+            sx={{
+              width: { xs: "100%", md: 320 },
+              backgroundColor: "#1A1A1A",
+              p: { xs: 2, sm: 2.5 },
+              borderRadius: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2.5,
+            }}
+          >
+            <ParameterForm
+              onParametersChange={setParameters}
+              onImageUpload={(url) => setReferenceImage(url)}
+            />
+          </Box>
 
-          {/* Right Panel */}
-          <Grid item xs={12} md={8} lg={9}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              {generatedVideo ? (
+          {/* Main content area */}
+          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2.5 }}>
+            {generatedVideo ? (
+              <Box
+                sx={{
+                  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.01)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                  }
+                }}
+              >
                 <VideoPreview video={generatedVideo} />
-              ) : (
-                <Box
-                  sx={{
-                    backgroundColor: "#1A1A1A",
-                    borderRadius: 2,
-                    p: 4,
-                    minHeight: 300,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  <Typography variant="body1" color="text.secondary">
-                    Your generated video will appear here
-                  </Typography>
-                </Box>
-              )}
-
+              </Box>
+            ) : (
               <Box
                 sx={{
                   backgroundColor: "#1A1A1A",
-                  borderRadius: 2,
-                  p: 3,
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  borderRadius: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: { xs: 300, sm: 400, md: 540 },
+                  width: "100%"
                 }}
               >
-                <PromptInput onGenerate={handleGenerate} loading={loading} />
+                <Typography variant="body1" color="text.secondary">
+                  Your generated video will appear here
+                </Typography>
               </Box>
+            )}
+
+            <Box
+              sx={{
+                backgroundColor: "#1A1A1A",
+                borderRadius: 1,
+                p: 2.5,
+              }}
+            >
+              <PromptInput onGenerate={handleGenerate} loading={loading} />
+            </Box>
 
               {loading && (
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    mt: 4,
-                    p: 4,
-                    bgcolor: "#1A1A1A",
-                    borderRadius: 2,
-                  }}
+              <Box
+                sx={{
+                  textAlign: "center",
+                  mt: 2.5,
+                  p: 2.5,
+                  bgcolor: "#1A1A1A",
+                  borderRadius: 1,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  gutterBottom
                 >
-                  <Typography
-                    variant="h6"
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    Generating your video...
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    This may take a few moments
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
+                  Generating your video...
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  This may take a few moments
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </Box>
       </Container>
     </Box>
   );

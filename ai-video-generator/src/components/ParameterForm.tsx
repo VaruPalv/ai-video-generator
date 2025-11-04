@@ -1,5 +1,5 @@
-import { Box, FormControlLabel, Switch, TextField, Typography, MenuItem, IconButton } from "@mui/material";
-import { Add, Remove, Delete } from "@mui/icons-material";
+import { Box, FormControlLabel, Switch, TextField, Typography, MenuItem, IconButton, Tooltip } from "@mui/material";
+import { Add, Remove, Delete, InfoOutlined } from "@mui/icons-material";
 import { useState, useRef } from "react";
 import { uploadImage } from "../api/videoApi";
 
@@ -85,12 +85,24 @@ export default function ParameterForm({ onParametersChange, onImageUpload }: Par
       </Box>
 
       {/* Reference Image */}
-      <Typography
-        variant="body2"
-        sx={{ color: "text.secondary", mb: 1, fontSize: "0.875rem" }}
-      >
-        Reference Image
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", mb: 1, fontSize: "0.875rem" }}
+        >
+          Reference Image
+        </Typography>
+        <Tooltip
+          title={<span style={{ fontSize: 13 }}>Upload a reference image to guide video generation.</span>}
+          enterDelay={150}
+          leaveDelay={100}
+          arrow
+        >
+          <IconButton size="small" sx={{ color: 'text.secondary', mt: '2px' }}>
+            <InfoOutlined sx={{ fontSize: 16 }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       {preview ? (
         <Box sx={{ position: "relative" }}>
           <Box

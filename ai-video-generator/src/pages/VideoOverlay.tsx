@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Box, IconButton, Typography, Paper } from "@mui/material";
 import { Close, Download, Bookmark, Share } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -7,10 +7,17 @@ export default function VideoOverlay() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [videoData, setVideoData] = useState<any>(null);
+  const location = useLocation();
 
   useEffect(() => {
-    // In a real app, you'd fetch video data by ID
-    // For now, use mock data
+    // If the opener passed video data via navigation state, use it.
+    if (location.state && (location.state as any).video) {
+      setVideoData((location.state as any).video);
+      return;
+    }
+
+    // Otherwise, in a real app you'd fetch video data by ID.
+    // For now, use mock data as a fallback.
     setVideoData({
       url: "https://www.w3schools.com/html/mov_bbb.mp4",
       prompt: "A woman running around central park in the morning",
@@ -18,11 +25,18 @@ export default function VideoOverlay() {
       resolution: 720,
       modelName: "Veo 3.1",
       createdAt: new Date().toISOString(),
+      id,
     });
-  }, [id]);
+  }, [id, location.state]);
 
   const handleClose = () => {
-    navigate(-1);
+    // If there is a previous history entry, go back to close overlay.
+    // Otherwise navigate to home to avoid leaving the app.
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
   };
 
   if (!videoData) {

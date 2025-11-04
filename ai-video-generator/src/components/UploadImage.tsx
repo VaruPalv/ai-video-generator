@@ -1,7 +1,8 @@
-import { Box, Typography, Avatar, IconButton } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { useState, useRef } from "react";
 import { uploadImage } from "../api/videoApi";
+import { optimizeImage } from "../utils/imageOptimizer";
 
 interface UploadImageProps {
   onUpload: (imageUrl: string) => void;
@@ -23,7 +24,9 @@ export default function UploadImage({ onUpload }: UploadImageProps) {
 
     setUploading(true);
     try {
-      const imageUrl = await uploadImage(file);
+      // Optimize image before upload
+      const optimizedFile = await optimizeImage(file);
+      const imageUrl = await uploadImage(optimizedFile);
       setPreview(imageUrl);
       onUpload(imageUrl);
     } catch (error) {

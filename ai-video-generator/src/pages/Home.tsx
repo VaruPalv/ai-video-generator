@@ -81,7 +81,7 @@ export default function Home() {
     };
     const url = new URL(window.location.href);
     url.searchParams.set("state", Date.now().toString());
-    window.history.replaceState(state, "", url.toString());
+    window.history.pushState(state, "", url.toString());
   };
 
   return (

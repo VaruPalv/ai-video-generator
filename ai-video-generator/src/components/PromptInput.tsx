@@ -11,7 +11,7 @@ interface PromptInputProps {
 export default function PromptInput({ onGenerate, loading = false, value = "" }: PromptInputProps) {
   const [prompt, setPrompt] = useState("");
   useEffect(() => {
-    setPrompt(value || "");
+    setPrompt(value);
   }, [value]);
 
   const handleSubmit = (e: React.FormEvent) => {
